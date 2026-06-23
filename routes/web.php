@@ -48,6 +48,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/sales', \App\Livewire\Reports\SalesReport::class)->name('reports.sales');
     Route::get('/reports/inventory', \App\Livewire\Reports\InventoryReport::class)->name('reports.inventory');
     Route::get('/reports/financial', \App\Livewire\Reports\FinancialReport::class)->name('reports.financial');
+    Route::get('/reports/profit-loss', \App\Livewire\Reports\ProfitLoss::class)->name('reports.profit-loss');
+    Route::get('/reports/profit-loss/print', [\App\Http\Controllers\ReportController::class, 'profitLossPrint'])->name('reports.profit-loss.print');
     Route::get('/reports/product-movement', \App\Livewire\Reports\ProductMovementReport::class)->name('reports.product-movement');
     Route::get('/reports/audit-trail', \App\Livewire\Reports\AuditTrail::class)->name('reports.audit-trail');
     

@@ -192,6 +192,16 @@
                         Financial Report
                     </x-sidebar-link>
 
+                    <x-sidebar-link route="reports.profit-loss" :active="request()->routeIs('reports.profit-loss')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                            </svg>
+                        </x-slot>
+                        Profit and Loss
+                    </x-sidebar-link>
+
                     <x-sidebar-link route="reports.product-movement" :active="request()->routeIs('reports.product-movement')" :open="true">
         <x-slot name="icon">
             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
