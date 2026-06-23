@@ -1,77 +1,111 @@
 <?php
 
+use App\Http\Controllers\ReceiptController;
+use App\Http\Controllers\ReportController;
+use App\Livewire\Accounting\ExpenseForm;
+use App\Livewire\Accounting\ExpenseList;
+use App\Livewire\Customers\CustomerForm;
+use App\Livewire\Customers\CustomerList;
+use App\Livewire\Dashboard\Overview;
+use App\Livewire\Inventory\InventoryDashboard;
+use App\Livewire\Inventory\ProductBatches;
+use App\Livewire\Inventory\StockMovementForm;
+use App\Livewire\Inventory\StockMovementsLog;
+use App\Livewire\Pos\PosInterface;
+use App\Livewire\Products\CategoryForm;
+use App\Livewire\Products\CategoryList;
+use App\Livewire\Products\ProductForm;
+use App\Livewire\Products\ProductList;
+use App\Livewire\Purchases\PurchaseOrderForm;
+use App\Livewire\Purchases\PurchaseOrderList;
+use App\Livewire\Reports\AuditTrail;
+use App\Livewire\Reports\FinancialReport;
+use App\Livewire\Reports\InventoryReport;
+use App\Livewire\Reports\ProductMovementReport;
+use App\Livewire\Reports\ProfitLoss;
+use App\Livewire\Reports\SalesReport;
+use App\Livewire\Returns\PurchaseReturnManager;
+use App\Livewire\Returns\SalesReturnManager;
+use App\Livewire\Roles\RoleForm;
+use App\Livewire\Roles\RoleList;
+use App\Livewire\Suppliers\SupplierForm;
+use App\Livewire\Suppliers\SupplierList;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome');
 
-    // Dashboard Route
-    Route::get('/dashboard', \App\Livewire\Dashboard\Overview::class)
-        ->middleware(['auth', 'verified'])
-        ->name('dashboard');
+// Dashboard Route
+Route::get('/dashboard', Overview::class)
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::view('profile', 'profile')->name('profile');
 
     // Category Routes
-    Route::get('/categories', \App\Livewire\Products\CategoryList::class)->name('categories.index');
-    Route::get('/categories/create', \App\Livewire\Products\CategoryForm::class)->name('categories.create');
-    Route::get('/categories/{categoryId}', \App\Livewire\Products\CategoryForm::class)->name('categories.edit');
+    Route::get('/categories', CategoryList::class)->name('categories.index');
+    Route::get('/categories/create', CategoryForm::class)->name('categories.create');
+    Route::get('/categories/{categoryId}', CategoryForm::class)->name('categories.edit');
 
     // Product Routes
-    Route::get('/products', \App\Livewire\Products\ProductList::class)->name('products.index');
-    Route::get('/products/create', \App\Livewire\Products\ProductForm::class)->name('products.create');
-    Route::get('/products/{productId}', \App\Livewire\Products\ProductForm::class)->name('products.edit');
+    Route::get('/products', ProductList::class)->name('products.index');
+    Route::get('/products/create', ProductForm::class)->name('products.create');
+    Route::get('/products/{productId}', ProductForm::class)->name('products.edit');
 
     // POS Route
-    Route::get('/pos', \App\Livewire\Pos\PosInterface::class)->name('pos.index');
-    Route::get('/sales/{sale}/receipt', [\App\Http\Controllers\ReceiptController::class, 'download'])->name('sales.receipt');
-    Route::get('/sales/{sale}/invoice', [\App\Http\Controllers\ReceiptController::class, 'invoice'])->name('sales.invoice');
+    Route::get('/pos', PosInterface::class)->name('pos.index');
+    Route::get('/sales/{sale}/receipt', [ReceiptController::class, 'download'])->name('sales.receipt');
+    Route::get('/sales/{sale}/invoice', [ReceiptController::class, 'invoice'])->name('sales.invoice');
 
     // Expense Routes
-    Route::get('/expenses', \App\Livewire\Accounting\ExpenseList::class)->name('expenses.index');
-    Route::get('/expenses/create', \App\Livewire\Accounting\ExpenseForm::class)->name('expenses.create');
-    Route::get('/expenses/{expenseId}/edit', \App\Livewire\Accounting\ExpenseForm::class)->name('expenses.edit');
+    Route::get('/expenses', ExpenseList::class)->name('expenses.index');
+    Route::get('/expenses/create', ExpenseForm::class)->name('expenses.create');
+    Route::get('/expenses/{expenseId}/edit', ExpenseForm::class)->name('expenses.edit');
 
     // Inventory Routes
-    Route::get('/inventory', \App\Livewire\Inventory\InventoryDashboard::class)->name('inventory.index');
-    Route::get('/inventory/stock-in', \App\Livewire\Inventory\StockMovementForm::class)->name('inventory.stock-in');
-    Route::get('/inventory/stock-out', \App\Livewire\Inventory\StockMovementForm::class)->name('inventory.stock-out');
-    Route::get('/inventory/movements', \App\Livewire\Inventory\StockMovementsLog::class)->name('inventory.movements');
-    Route::get('/inventory/batches', \App\Livewire\Inventory\ProductBatches::class)->name('inventory.batches');
+    Route::get('/inventory', InventoryDashboard::class)->name('inventory.index');
+    Route::get('/inventory/stock-in', StockMovementForm::class)->name('inventory.stock-in');
+    Route::get('/inventory/stock-out', StockMovementForm::class)->name('inventory.stock-out');
+    Route::get('/inventory/movements', StockMovementsLog::class)->name('inventory.movements');
+    Route::get('/inventory/batches', ProductBatches::class)->name('inventory.batches');
 
     // Role & Permission Routes
-    Route::get('/roles', \App\Livewire\Roles\RoleList::class)->name('roles.index');
-    Route::get('/roles/create', \App\Livewire\Roles\RoleForm::class)->name('roles.create');
-    Route::get('/roles/{roleId}', \App\Livewire\Roles\RoleForm::class)->name('roles.edit');
+    Route::get('/roles', RoleList::class)->name('roles.index');
+    Route::get('/roles/create', RoleForm::class)->name('roles.create');
+    Route::get('/roles/{roleId}', RoleForm::class)->name('roles.edit');
 
     // Report Routes
-    Route::get('/reports/sales', \App\Livewire\Reports\SalesReport::class)->name('reports.sales');
-    Route::get('/reports/inventory', \App\Livewire\Reports\InventoryReport::class)->name('reports.inventory');
-    Route::get('/reports/financial', \App\Livewire\Reports\FinancialReport::class)->name('reports.financial');
-    Route::get('/reports/profit-loss', \App\Livewire\Reports\ProfitLoss::class)->name('reports.profit-loss');
-    Route::get('/reports/profit-loss/print', [\App\Http\Controllers\ReportController::class, 'profitLossPrint'])->name('reports.profit-loss.print');
-    Route::get('/reports/product-movement', \App\Livewire\Reports\ProductMovementReport::class)->name('reports.product-movement');
-    Route::get('/reports/audit-trail', \App\Livewire\Reports\AuditTrail::class)->name('reports.audit-trail');
-    
+    Route::get('/reports/sales', SalesReport::class)->name('reports.sales');
+    Route::get('/reports/inventory', InventoryReport::class)->name('reports.inventory');
+    Route::get('/reports/financial', FinancialReport::class)->name('reports.financial');
+    Route::get('/reports/profit-loss', ProfitLoss::class)->name('reports.profit-loss');
+    Route::get('/reports/profit-loss/print', [ReportController::class, 'profitLossPrint'])->name('reports.profit-loss.print');
+    Route::get('/reports/product-movement', ProductMovementReport::class)->name('reports.product-movement');
+    Route::get('/reports/audit-trail', AuditTrail::class)->name('reports.audit-trail');
+
     // Export Routes
-    Route::get('/reports/sales/export/csv', [\App\Http\Controllers\ReportController::class, 'exportSalesCsv'])->name('reports.sales.export.csv');
-    Route::get('/reports/inventory/export/csv', [\App\Http\Controllers\ReportController::class, 'exportInventoryCsv'])->name('reports.inventory.export.csv');
-    Route::get('/reports/sales/export/pdf', [\App\Http\Controllers\ReportController::class, 'exportSalesPdf'])->name('reports.sales.export.pdf');
+    Route::get('/reports/sales/export/csv', [ReportController::class, 'exportSalesCsv'])->name('reports.sales.export.csv');
+    Route::get('/reports/inventory/export/csv', [ReportController::class, 'exportInventoryCsv'])->name('reports.inventory.export.csv');
+    Route::get('/reports/sales/export/pdf', [ReportController::class, 'exportSalesPdf'])->name('reports.sales.export.pdf');
 
     // Supplier Routes
-    Route::get('/suppliers', \App\Livewire\Suppliers\SupplierList::class)->name('suppliers.index');
-    Route::get('/suppliers/create', \App\Livewire\Suppliers\SupplierForm::class)->name('suppliers.create');
-    Route::get('/suppliers/{supplierId}/edit', \App\Livewire\Suppliers\SupplierForm::class)->name('suppliers.edit');
+    Route::get('/suppliers', SupplierList::class)->name('suppliers.index');
+    Route::get('/suppliers/create', SupplierForm::class)->name('suppliers.create');
+    Route::get('/suppliers/{supplierId}/edit', SupplierForm::class)->name('suppliers.edit');
 
     // Purchase Order Routes
-    Route::get('/purchases', \App\Livewire\Purchases\PurchaseOrderList::class)->name('purchases.index');
-    Route::get('/purchases/create', \App\Livewire\Purchases\PurchaseOrderForm::class)->name('purchases.create');
-    Route::get('/purchases/{purchaseOrderId}/edit', \App\Livewire\Purchases\PurchaseOrderForm::class)->name('purchases.edit');
+    Route::get('/purchases', PurchaseOrderList::class)->name('purchases.index');
+    Route::get('/purchases/create', PurchaseOrderForm::class)->name('purchases.create');
+    Route::get('/purchases/{purchaseOrderId}/edit', PurchaseOrderForm::class)->name('purchases.edit');
+
+    // Returns Routes
+    Route::get('/returns/sales', SalesReturnManager::class)->name('returns.sales');
+    Route::get('/returns/purchases', PurchaseReturnManager::class)->name('returns.purchases');
 
     // Customer Routes
-    Route::get('/customers', \App\Livewire\Customers\CustomerList::class)->name('customers.index');
-    Route::get('/customers/create', \App\Livewire\Customers\CustomerForm::class)->name('customers.create');
-    Route::get('/customers/{customerId}/edit', \App\Livewire\Customers\CustomerForm::class)->name('customers.edit');
+    Route::get('/customers', CustomerList::class)->name('customers.index');
+    Route::get('/customers/create', CustomerForm::class)->name('customers.create');
+    Route::get('/customers/{customerId}/edit', CustomerForm::class)->name('customers.edit');
 });
 
 require __DIR__.'/auth.php';

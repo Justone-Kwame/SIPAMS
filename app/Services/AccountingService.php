@@ -4,8 +4,11 @@ namespace App\Services;
 
 use App\Models\Expense;
 use App\Models\PurchaseOrder;
+use App\Models\PurchaseReturn;
 use App\Models\Sale;
 use App\Models\SaleItem;
+use App\Models\SalesReturn;
+use App\Models\SalesReturnItem;
 use App\Models\StockMovement;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -61,10 +64,10 @@ class AccountingService extends BaseService
         $salesCount = (clone $completedSales)->count();
         $salesAmount = (float) (clone $completedSales)->sum('net_amount');
 
-        // ── Sales returns (refunded sales) ───────────────────────────────────
-        $refundedSales = Sale::where('status', 'refunded')->whereBetween('date', [$startDate, $endDate]);
-        $salesReturnCount = (clone $refundedSales)->count();
-        $salesReturnAmount = (float) (clone $refundedSales)->sum('net_amount');
+        // ── Sales returns ────────────────────────────────────────────────────
+        $salesReturns = SalesReturn::whereBetween('date', [$startDate, $endDate]);
+        $salesReturnCount = (clone $salesReturns)->count();
+        $salesReturnAmount = (float) (clone $salesReturns)->sum('total_amount');
 
         // ── Purchases (delivered purchase orders) ────────────────────────────
         $deliveredPurchases = PurchaseOrder::where('status', 'delivered')
@@ -72,17 +75,19 @@ class AccountingService extends BaseService
         $purchasesCount = (clone $deliveredPurchases)->count();
         $purchasesAmount = (float) (clone $deliveredPurchases)->sum('total_amount');
 
-        // ── Purchase returns (not yet modelled) ──────────────────────────────
-        $purchasesReturnCount = 0;
-        $purchasesReturnAmount = 0.0;
+        // ── Purchase returns ──────────────────────────────────────────────────
+        $purchaseReturns = PurchaseReturn::whereBetween('date', [$startDate, $endDate]);
+        $purchasesReturnCount = (clone $purchaseReturns)->count();
+        $purchasesReturnAmount = (float) (clone $purchaseReturns)->sum('total_amount');
 
         // ── Revenue ──────────────────────────────────────────────────────────
         $revenue = $salesAmount - $salesReturnAmount;
 
         // ── Cash payment flows ───────────────────────────────────────────────
-        $paymentsReceived = $salesAmount; // POS sales are settled on completion
+        // Refunds to customers reduce net cash received; supplier refunds reduce net cash sent.
+        $paymentsReceived = $salesAmount - $salesReturnAmount;
         $paymentsSent = (float) PurchaseOrder::whereBetween('order_date', [$startDate, $endDate])
-            ->sum('paid_amount');
+            ->sum('paid_amount') - $purchasesReturnAmount;
 
         // ── Expenses ─────────────────────────────────────────────────────────
         $expenses = (float) $this->getTotalExpenses($startDate, $endDate);
@@ -104,8 +109,15 @@ class AccountingService extends BaseService
             ->join('product_batches', 'stock_movements.product_batch_id', '=', 'product_batches.id')
             ->sum(DB::raw('stock_movements.quantity * product_batches.cost_price'));
 
-        $grossProfitFifo = $revenue - $cogsFifo;
-        $grossProfitAverage = $revenue - $cogsAverage;
+        // Returned sales remove their cost from COGS (goods came back into stock),
+        // so that a return only strips its own margin from profit.
+        $returnIds = (clone $salesReturns)->pluck('id');
+        $returnedCogs = (float) SalesReturnItem::whereIn('sales_return_id', $returnIds)
+            ->join('products', 'sales_return_items.product_id', '=', 'products.id')
+            ->sum(DB::raw('sales_return_items.quantity * products.cost_price'));
+
+        $grossProfitFifo = $revenue - ($cogsFifo - $returnedCogs);
+        $grossProfitAverage = $revenue - ($cogsAverage - $returnedCogs);
 
         $profitNetFifo = $grossProfitFifo - $expenses;
         $profitNetAverage = $grossProfitAverage - $expenses;

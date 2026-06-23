@@ -127,6 +127,28 @@
                         Purchases
                     </x-sidebar-link>
 
+                    {{-- Sales Returns --}}
+                    <x-sidebar-link route="returns.sales" :active="request()->routeIs('returns.sales')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h10a4 4 0 014 4v1m-7-9l-3 3 3 3"/>
+                            </svg>
+                        </x-slot>
+                        Sales Returns
+                    </x-sidebar-link>
+
+                    {{-- Purchase Returns --}}
+                    <x-sidebar-link route="returns.purchases" :active="request()->routeIs('returns.purchases')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 10H11a4 4 0 00-4 4v1m7-9l3 3-3 3"/>
+                            </svg>
+                        </x-slot>
+                        Purchase Returns
+                    </x-sidebar-link>
+
                     {{-- Customers --}}
                     <x-sidebar-link route="roles.index" :active="request()->routeIs('roles.*')" :open="true">
                         <x-slot name="icon">
