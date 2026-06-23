@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-black text-gray-800">Profit and Loss</h1>
             <p class="text-sm text-gray-500 mt-0.5">Sales, purchases, payments and net profit for the period.</p>
         </div>
-        <a href="{{ route('reports.profit-loss.print', ['start' => $startDate, 'end' => $endDate]) }}"
+        <a href="{{ route($printRoute, ['start' => $startDate, 'end' => $endDate]) }}"
            target="_blank"
            class="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

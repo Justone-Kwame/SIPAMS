@@ -83,6 +83,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/product-movement', ProductMovementReport::class)->name('reports.product-movement');
     Route::get('/reports/audit-trail', AuditTrail::class)->name('reports.audit-trail');
 
+    // Accounting Routes (Profit and Loss also accessible under Accounting)
+    Route::get('/accounting/profit-loss', ProfitLoss::class)->name('accounting.profit-loss');
+    Route::get('/accounting/profit-loss/print', [ReportController::class, 'profitLossPrint'])->name('accounting.profit-loss.print');
+
     // Export Routes
     Route::get('/reports/sales/export/csv', [ReportController::class, 'exportSalesCsv'])->name('reports.sales.export.csv');
     Route::get('/reports/inventory/export/csv', [ReportController::class, 'exportInventoryCsv'])->name('reports.inventory.export.csv');

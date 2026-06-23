@@ -12,10 +12,16 @@ class ProfitLoss extends Component
 
     public $endDate;
 
+    public $printRoute = 'reports.profit-loss.print';
+
     public function mount(AccountingService $accounting)
     {
         $this->startDate = Carbon::now()->startOfMonth()->toDateString();
         $this->endDate = Carbon::now()->endOfMonth()->toDateString();
+
+        if (request()->routeIs('accounting.*')) {
+            $this->printRoute = 'accounting.profit-loss.print';
+        }
     }
 
     public function render(AccountingService $accounting)

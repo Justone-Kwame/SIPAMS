@@ -23,9 +23,13 @@ class ReportController extends Controller
 
         $pl = $accounting->getProfitLoss($startDate, $endDate);
 
+        $backUrl = $request->routeIs('accounting.*')
+            ? route('accounting.profit-loss')
+            : route('reports.profit-loss');
+
         return view('reports.profit-loss-print', [
             'pl' => $pl,
-            'backUrl' => route('reports.profit-loss'),
+            'backUrl' => $backUrl,
         ]);
     }
 

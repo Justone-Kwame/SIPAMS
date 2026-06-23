@@ -178,6 +178,22 @@
                         Expenses
                     </x-sidebar-link>
 
+                    {{-- Accounting section --}}
+                    <div class="pt-3">
+                        <p x-show="sidebarOpen" class="px-2 mb-1 text-xs font-bold uppercase tracking-widest" style="color:#4a7c94;">Accounting</p>
+                        <p x-show="!sidebarOpen" class="px-2 mb-1 border-t" style="border-color:#1a3e52;"></p>
+                    </div>
+
+                    <x-sidebar-link route="accounting.profit-loss" :active="request()->routeIs('accounting.profit-loss')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                            </svg>
+                        </x-slot>
+                        Profit and Loss
+                    </x-sidebar-link>
+
                     {{-- Reports section --}}
                     <div class="pt-3">
                         <p x-show="sidebarOpen" class="px-2 mb-1 text-xs font-bold uppercase tracking-widest" style="color:#4a7c94;">Reports</p>
