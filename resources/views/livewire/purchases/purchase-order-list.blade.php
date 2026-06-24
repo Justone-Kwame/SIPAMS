@@ -10,6 +10,16 @@
         <div class="px-4 py-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm">{{ session('success') }}</div>
     @endif
 
+    @if (session()->has('info'))
+        <div class="px-4 py-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg text-sm">{{ session('info') }}</div>
+    @endif
+
+    @if (count($selected) > 0)
+        <div class="px-4 py-3 bg-amber-50 border border-amber-200 text-amber-700 rounded-lg text-sm font-semibold">
+            {{ count($selected) }} {{ count($selected) === 1 ? 'row' : 'rows' }} selected
+        </div>
+    @endif
+
     {{-- Toolbar --}}
     <div class="flex flex-wrap items-center gap-3">
         <div class="relative w-full sm:w-72">
@@ -82,6 +92,8 @@
                     <tr class="text-gray-500">
                         <th class="px-4 py-3 text-left w-10">
                             <input type="checkbox" wire:model.live="selectAll"
+                                x-data
+                                x-effect="$el.indeterminate = {{ count($selected) }} > 0 && !$el.checked"
                                 class="rounded border-gray-300 text-violet-600 focus:ring-violet-400">
                         </th>
                         <th class="px-4 py-3 text-left font-semibold">Action</th>
@@ -126,28 +138,105 @@
                                     class="rounded border-gray-300 text-violet-600 focus:ring-violet-400">
                             </td>
                             <td class="px-4 py-3">
-                                <div x-data="{ open: false }" class="relative">
-                                    <button @click="open = !open" @click.outside="open = false"
+                                <div x-data="{
+                                        open: false,
+                                        x: 0, y: 0,
+                                        toggle() {
+                                            this.open = !this.open;
+                                            if (this.open) this.place();
+                                        },
+                                        place() {
+                                            const r = $refs.btn.getBoundingClientRect();
+                                            const menuW = 224, menuH = 480;
+                                            this.x = Math.min(r.left, window.innerWidth - menuW - 8);
+                                            this.y = (window.innerHeight - r.bottom < menuH)
+                                                ? Math.max(8, r.top - menuH)
+                                                : r.bottom + 4;
+                                        }
+                                    }">
+                                    <button x-ref="btn" @click="toggle()"
                                         class="px-2 py-1 rounded text-gray-500 hover:bg-gray-100 transition" title="Actions">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                                             <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM18 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                         </svg>
                                     </button>
-                                    <div x-show="open" x-cloak x-transition
-                                        class="absolute left-0 z-20 mt-1 w-36 rounded-md bg-white shadow-lg border border-gray-100 py-1">
-                                        <a href="{{ route('purchases.edit', $po->id) }}" wire:navigate
-                                            class="flex items-center gap-2 px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                            </svg>
-                                            Edit
+                                    <div x-show="open" x-cloak x-transition @click.outside="open = false"
+                                        @keydown.escape.window="open = false"
+                                        :style="`top:${y}px; left:${x}px`"
+                                        class="fixed z-50 w-56 max-h-[80vh] overflow-y-auto rounded-lg bg-white shadow-xl ring-1 ring-black/5 py-1.5 text-gray-700">
+
+                                        <a href="{{ route('purchases.edit', $po->id) }}" wire:navigate @click="open = false"
+                                            class="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                            Purchase Detail
                                         </a>
+
+                                        <a href="{{ route('purchases.edit', $po->id) }}" wire:navigate @click="open = false"
+                                            class="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                            Edit Purchase
+                                        </a>
+
+                                        <a href="{{ route('returns.purchases') }}" wire:navigate @click="open = false"
+                                            class="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                                            Purchase Return
+                                        </a>
+
+                                        <button wire:click="comingSoon('Show Payments')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"/></svg>
+                                            Show Payments
+                                        </button>
+
+                                        <button wire:click="comingSoon('Create Payment')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                            Create Payment
+                                        </button>
+
+                                        <a href="{{ route('purchases.pdf', $po->id) }}" @click="open = false"
+                                            class="flex items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                            Download Pdf
+                                        </a>
+
+                                        <button wire:click="comingSoon('Print Labels')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5v14M8 5v14M12 5v14M16 5v14M20 5v14"/></svg>
+                                            Print Labels
+                                        </button>
+
+                                        <button wire:click="comingSoon('WhatsApp Notification')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7l9 6 9-6"/></svg>
+                                            WhatsApp Notification
+                                        </button>
+
+                                        <button wire:click="comingSoon('Email Notification')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                                            Email notification
+                                        </button>
+
+                                        <button wire:click="comingSoon('SMS Notification')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.86 9.86 0 01-4-.8L3 20l1.3-3.9A7.96 7.96 0 013 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                            SMS notification
+                                        </button>
+
+                                        <button wire:click="comingSoon('Attach Documents')" @click="open = false"
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm hover:bg-gray-50">
+                                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+                                            Attach Documents
+                                        </button>
+
+                                        <div class="my-1 border-t border-gray-100"></div>
+
                                         <button wire:click="confirmDelete({{ $po->id }})" @click="open = false"
-                                            class="flex w-full items-center gap-2 px-3 py-2 text-sm text-red-600 hover:bg-red-50">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                            </svg>
-                                            Delete
+                                            class="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                                            Delete Purchase
                                         </button>
                                     </div>
                                 </div>

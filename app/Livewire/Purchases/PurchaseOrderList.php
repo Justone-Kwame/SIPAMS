@@ -81,6 +81,11 @@ class PurchaseOrderList extends Component
         }
     }
 
+    public function comingSoon(string $feature): void
+    {
+        session()->flash('info', "{$feature} is coming soon.");
+    }
+
     public function confirmDelete(int $id): void
     {
         $this->deleteId = $id;

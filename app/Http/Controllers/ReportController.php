@@ -185,6 +185,19 @@ class ReportController extends Controller
         return $pdf->download('purchases-'.date('Y-m-d').'.pdf');
     }
 
+    // Download a single purchase as PDF
+    public function purchasePdf(int $purchaseOrderId)
+    {
+        $purchase = PurchaseOrder::with(['supplier', 'items.product'])->findOrFail($purchaseOrderId);
+
+        $pdf = Pdf::loadView('reports.purchase-detail-pdf', [
+            'purchase' => $purchase,
+            'paymentStatus' => $this->paymentStatusLabel($purchase),
+        ]);
+
+        return $pdf->download('purchase-'.$purchase->po_number.'.pdf');
+    }
+
     // Export sales report as PDF
     public function exportSalesPdf(Request $request)
     {
