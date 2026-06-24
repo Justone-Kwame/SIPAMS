@@ -198,6 +198,17 @@ class ReportController extends Controller
         return $pdf->download('purchase-'.$purchase->po_number.'.pdf');
     }
 
+    // Print preview for a single purchase order (opens in browser)
+    public function purchasePrintPreview(int $purchaseOrderId)
+    {
+        $purchase = PurchaseOrder::with(['supplier', 'items.product'])->findOrFail($purchaseOrderId);
+
+        return view('reports.purchase-print-preview', [
+            'purchase' => $purchase,
+            'paymentStatus' => $this->paymentStatusLabel($purchase),
+        ]);
+    }
+
     // Export sales report as PDF
     public function exportSalesPdf(Request $request)
     {
