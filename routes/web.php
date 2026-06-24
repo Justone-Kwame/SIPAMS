@@ -99,6 +99,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Purchase Order Routes
     Route::get('/purchases', PurchaseOrderList::class)->name('purchases.index');
+    Route::get('/purchases/export/csv', [ReportController::class, 'exportPurchasesCsv'])->name('purchases.export.csv');
+    Route::get('/purchases/export/pdf', [ReportController::class, 'exportPurchasesPdf'])->name('purchases.export.pdf');
     Route::get('/purchases/create', PurchaseOrderForm::class)->name('purchases.create');
     Route::get('/purchases/{purchaseOrderId}/edit', PurchaseOrderForm::class)->name('purchases.edit');
 
