@@ -50,6 +50,16 @@ Route::middleware(['auth'])->group(function () {
     // Product Routes
     Route::get('/products', ProductList::class)->name('products.index');
     Route::get('/products/create', ProductForm::class)->name('products.create');
+    Route::get('/products/print-labels', \App\Livewire\Products\PrintLabels::class)->name('labels.index');
+    Route::get('/products/labels/print', function () {
+        $data = session('print_labels');
+        if (!$data) return redirect()->route('labels.index');
+        $data['pageCount'] = (int) ceil(
+            array_sum(array_column($data['products'], 'quantity')) /
+            match($data['paperSize']) { '24_a4' => 24, '10_a4' => 10, default => 40 }
+        ) ?: 1;
+        return view('reports.labels-print', $data);
+    })->name('labels.print');
     Route::get('/products/{productId}', ProductForm::class)->name('products.edit');
 
     // POS Route
