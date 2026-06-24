@@ -178,21 +178,47 @@
                         Expenses
                     </x-sidebar-link>
 
-                    {{-- Accounting section --}}
-                    <div class="pt-3">
-                        <p x-show="sidebarOpen" class="px-2 mb-1 text-xs font-bold uppercase tracking-widest" style="color:#4a7c94;">Accounting</p>
-                        <p x-show="!sidebarOpen" class="px-2 mb-1 border-t" style="border-color:#1a3e52;"></p>
-                    </div>
-
-                    <x-sidebar-link route="accounting.profit-loss" :active="request()->routeIs('accounting.profit-loss')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                    {{-- Advance Accounting (collapsible parent with submenu) --}}
+                    <div x-data="{ accountingOpen: {{ request()->routeIs('accounting.*') ? 'true' : 'false' }} }">
+                        <button
+                            type="button"
+                            @click="accountingOpen = !accountingOpen"
+                            title="Advance Accounting"
+                            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+                            style="{{ request()->routeIs('accounting.*') ? 'color:#fff;' : 'color:#94a3b8;' }}"
+                            onmouseover="this.style.color='#fff'; this.style.background='#1a3e52';"
+                            onmouseout="this.style.color='{{ request()->routeIs('accounting.*') ? '#fff' : '#94a3b8' }}'; this.style.background='';"
+                        >
+                            <span class="flex-shrink-0">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 3v18h18M9 17V9m4 8V5m4 12v-6"/>
+                                </svg>
+                            </span>
+                            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Advance Accounting</span>
+                            <svg x-show="sidebarOpen" :class="accountingOpen ? 'rotate-90' : ''"
+                                 class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                             </svg>
-                        </x-slot>
-                        Profit and Loss
-                    </x-sidebar-link>
+                        </button>
+
+                        {{-- Submenu --}}
+                        <div x-show="accountingOpen && sidebarOpen"
+                             x-transition:enter="transition-all ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+                            <x-sidebar-link route="accounting.profit-loss" :active="request()->routeIs('accounting.profit-loss')" :open="true">
+                                <x-slot name="icon">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </x-slot>
+                                Profit and Loss
+                            </x-sidebar-link>
+                        </div>
+                    </div>
 
                     {{-- Reports section --}}
                     <div class="pt-3">
