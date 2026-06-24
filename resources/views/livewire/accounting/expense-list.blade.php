@@ -282,11 +282,8 @@
     @endif
 
     {{-- ApexCharts --}}
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.0/dist/apexcharts.min.js"></script>
+    @script
     <script>
-        document.addEventListener('livewire:navigated', initExpenseChart);
-        document.addEventListener('DOMContentLoaded', initExpenseChart);
-
         function initExpenseChart() {
             const el = document.querySelector('#chartMonthlyExpenses');
             if (!el || el._chart) return;
@@ -318,5 +315,7 @@
             chart.render();
             el._chart = chart;
         }
+        initExpenseChart();
     </script>
+    @endscript
 </div>

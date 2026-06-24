@@ -269,7 +269,7 @@
     </div>
 
     {{-- ══════════ APEX CHARTS ══════════ --}}
-    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.0/dist/apexcharts.min.js"></script>
+    @script
     <script>
         const months = @json($monthLabels);
         const monthlySalesData = @json($monthlySalesData);
@@ -382,4 +382,5 @@
             }).render();
         }
     </script>
+    @endscript
 </div>

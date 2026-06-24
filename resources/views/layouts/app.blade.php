@@ -13,6 +13,9 @@
             <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 
 
+        <!-- ApexCharts -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.49.0/dist/apexcharts.min.js"></script>
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
