@@ -2,25 +2,24 @@
 
 namespace App\Services;
 
+use App\Models\Product;
 use App\Models\ProductBatch;
 use App\Models\StockMovement;
-use App\Models\Product;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Services\AuditService;
+use Illuminate\Support\Facades\DB;
 
 class InventoryService extends BaseService
 {
     /**
      * Add stock to a specific product by creating a new batch and recording the movement.
      */
-    public function receiveStock(Product $product, int $quantity, float $costPrice, ?string $expiryDate = null, ?string $batchNumber = null, ?int $purchaseId = null, ?int $userId = null)
+    public function receiveStock(Product $product, int $quantity, float $costPrice, ?string $expiryDate = null, ?string $batchNumber = null, ?int $purchaseId = null, ?int $userId = null, ?string $referenceType = null, ?int $referenceId = null)
     {
-        return DB::transaction(function () use ($product, $quantity, $costPrice, $expiryDate, $batchNumber, $purchaseId, $userId) {
-            
+        return DB::transaction(function () use ($product, $quantity, $costPrice, $expiryDate, $batchNumber, $purchaseId, $userId, $referenceType, $referenceId) {
+
             // Generate batch number if not provided
-            if (!$batchNumber) {
-                $batchNumber = 'BCH-' . strtoupper(substr(uniqid(), -6));
+            if (! $batchNumber) {
+                $batchNumber = 'BCH-'.strtoupper(substr(uniqid(), -6));
             }
 
             // Create new batch
@@ -32,7 +31,7 @@ class InventoryService extends BaseService
                 'quantity_remaining' => $quantity,
                 'cost_price' => $costPrice,
                 'expiry_date' => $expiryDate,
-                'status' => 'active'
+                'status' => 'active',
             ]);
 
             // Record stock movement (IN)
@@ -41,10 +40,10 @@ class InventoryService extends BaseService
                 'product_batch_id' => $batch->id,
                 'type' => 'in',
                 'quantity' => $quantity,
-                'reference_type' => $purchaseId ? 'purchase' : 'manual',
-                'reference_id' => $purchaseId,
+                'reference_type' => $referenceType ?? ($purchaseId ? 'purchase' : 'manual'),
+                'reference_id' => $referenceId ?? $purchaseId,
                 'user_id' => $userId,
-                'notes' => 'Stock received into batch ' . $batchNumber
+                'notes' => 'Stock received into batch '.$batchNumber,
             ]);
 
             AuditService::log('Stock Added', "Added {$quantity} units of '{$product->name}' to inventory", $product);
@@ -59,9 +58,9 @@ class InventoryService extends BaseService
     public function issueStock(Product $product, int $quantity, ?string $referenceType = null, ?int $referenceId = null, ?int $userId = null)
     {
         return DB::transaction(function () use ($product, $quantity, $referenceType, $referenceId, $userId) {
-            
+
             $remainingToIssue = $quantity;
-            
+
             // Get active batches sorted by expiry date (FIFO)
             $batches = ProductBatch::where('product_id', $product->id)
                 ->where('status', 'active')
@@ -76,10 +75,12 @@ class InventoryService extends BaseService
             }
 
             foreach ($batches as $batch) {
-                if ($remainingToIssue <= 0) break;
+                if ($remainingToIssue <= 0) {
+                    break;
+                }
 
                 $issueFromBatch = min($batch->quantity_remaining, $remainingToIssue);
-                
+
                 // Deduct from batch
                 $batch->quantity_remaining -= $issueFromBatch;
                 if ($batch->quantity_remaining == 0) {
@@ -96,7 +97,7 @@ class InventoryService extends BaseService
                     'reference_type' => $referenceType,
                     'reference_id' => $referenceId,
                     'user_id' => $userId,
-                    'notes' => 'Stock issued from batch ' . $batch->batch_number
+                    'notes' => 'Stock issued from batch '.$batch->batch_number,
                 ]);
 
                 $remainingToIssue -= $issueFromBatch;
@@ -112,7 +113,7 @@ class InventoryService extends BaseService
     public function getExpiringProducts(int $daysThreshold = 30)
     {
         $dateThreshold = Carbon::now()->addDays($daysThreshold);
-        
+
         return ProductBatch::with('product')
             ->where('status', 'active')
             ->whereNotNull('expiry_date')

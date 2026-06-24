@@ -127,6 +127,28 @@
                         Purchases
                     </x-sidebar-link>
 
+                    {{-- Sales Returns --}}
+                    <x-sidebar-link route="returns.sales" :active="request()->routeIs('returns.sales')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h10a4 4 0 014 4v1m-7-9l-3 3 3 3"/>
+                            </svg>
+                        </x-slot>
+                        Sales Returns
+                    </x-sidebar-link>
+
+                    {{-- Purchase Returns --}}
+                    <x-sidebar-link route="returns.purchases" :active="request()->routeIs('returns.purchases')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 10H11a4 4 0 00-4 4v1m7-9l3 3-3 3"/>
+                            </svg>
+                        </x-slot>
+                        Purchase Returns
+                    </x-sidebar-link>
+
                     {{-- Customers --}}
                     <x-sidebar-link route="roles.index" :active="request()->routeIs('roles.*')" :open="true">
                         <x-slot name="icon">
@@ -155,6 +177,48 @@
                         </x-slot>
                         Expenses
                     </x-sidebar-link>
+
+                    {{-- Advance Accounting (collapsible parent with submenu) --}}
+                    <div x-data="{ accountingOpen: {{ request()->routeIs('accounting.*') ? 'true' : 'false' }} }">
+                        <button
+                            type="button"
+                            @click="accountingOpen = !accountingOpen"
+                            title="Advance Accounting"
+                            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+                            style="{{ request()->routeIs('accounting.*') ? 'color:#fff;' : 'color:#94a3b8;' }}"
+                            onmouseover="this.style.color='#fff'; this.style.background='#1a3e52';"
+                            onmouseout="this.style.color='{{ request()->routeIs('accounting.*') ? '#fff' : '#94a3b8' }}'; this.style.background='';"
+                        >
+                            <span class="flex-shrink-0">
+                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M3 3v18h18M9 17V9m4 8V5m4 12v-6"/>
+                                </svg>
+                            </span>
+                            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Advance Accounting</span>
+                            <svg x-show="sidebarOpen" :class="accountingOpen ? 'rotate-90' : ''"
+                                 class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                            </svg>
+                        </button>
+
+                        {{-- Submenu --}}
+                        <div x-show="accountingOpen && sidebarOpen"
+                             x-transition:enter="transition-all ease-out duration-200"
+                             x-transition:enter-start="opacity-0 -translate-y-1"
+                             x-transition:enter-end="opacity-100 translate-y-0"
+                             class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+                            <x-sidebar-link route="accounting.profit-loss" :active="request()->routeIs('accounting.profit-loss')" :open="true">
+                                <x-slot name="icon">
+                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                                    </svg>
+                                </x-slot>
+                                Profit and Loss
+                            </x-sidebar-link>
+                        </div>
+                    </div>
 
                     {{-- Reports section --}}
                     <div class="pt-3">
@@ -190,6 +254,16 @@
                             </svg>
                         </x-slot>
                         Financial Report
+                    </x-sidebar-link>
+
+                    <x-sidebar-link route="reports.profit-loss" :active="request()->routeIs('reports.profit-loss')" :open="true">
+                        <x-slot name="icon">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
+                            </svg>
+                        </x-slot>
+                        Profit and Loss
                     </x-sidebar-link>
 
                     <x-sidebar-link route="reports.product-movement" :active="request()->routeIs('reports.product-movement')" :open="true">

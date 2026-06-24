@@ -2,15 +2,37 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Sale;
 use App\Models\Product;
-use App\Models\Expense;
-use Carbon\Carbon;
+use App\Models\Sale;
+use App\Services\AccountingService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    // Profit and Loss print preview
+    public function profitLossPrint(Request $request, AccountingService $accounting)
+    {
+        $startDate = $request->start
+            ? Carbon::parse($request->start)->startOfDay()
+            : Carbon::now()->startOfMonth();
+        $endDate = $request->end
+            ? Carbon::parse($request->end)->endOfDay()
+            : Carbon::now()->endOfMonth();
+
+        $pl = $accounting->getProfitLoss($startDate, $endDate);
+
+        $backUrl = $request->routeIs('accounting.*')
+            ? route('accounting.profit-loss')
+            : route('reports.profit-loss');
+
+        return view('reports.profit-loss-print', [
+            'pl' => $pl,
+            'backUrl' => $backUrl,
+        ]);
+    }
+
     // Export sales report as CSV
     public function exportSalesCsv(Request $request)
     {
@@ -35,13 +57,13 @@ class ReportController extends Controller
                 $sale->items->count(),
                 $sale->net_amount,
                 $sale->items->sum('profit'),
-                $sale->user->name ?? '—'
+                $sale->user->name ?? '—',
             ]);
         }
 
         fclose($handle);
 
-        return response()->streamDownload(function () use ($handle) {
+        return response()->streamDownload(function () {
             // Already written
         }, $filename, [
             'Content-Type' => 'text/csv',
@@ -51,11 +73,11 @@ class ReportController extends Controller
     // Export inventory report as CSV
     public function exportInventoryCsv()
     {
-        $products = Product::with(['category', 'batches' => function($q) {
+        $products = Product::with(['category', 'batches' => function ($q) {
             $q->where('status', 'active');
         }])->get();
 
-        $filename = "inventory-report-" . date('Y-m-d') . ".csv";
+        $filename = 'inventory-report-'.date('Y-m-d').'.csv';
         $handle = fopen('php://output', 'w');
 
         fputcsv($handle, ['Product Name', 'SKU', 'Category', 'Stock Qty', 'Cost Price', 'Inventory Value']);
@@ -70,7 +92,7 @@ class ReportController extends Controller
                 $product->category->name ?? '—',
                 $stockQty,
                 $product->cost_price,
-                $inventoryValue
+                $inventoryValue,
             ]);
         }
 
