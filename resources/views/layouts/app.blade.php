@@ -53,253 +53,198 @@
                 {{-- Navigation --}}
                 <nav class="flex-1 overflow-y-auto overflow-x-hidden py-4 space-y-1 px-2">
 
-                    {{-- Dashboard --}}
-                    <x-sidebar-link route="dashboard" :active="request()->routeIs('dashboard')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                            </svg>
-                        </x-slot>
-                        Dashboard
-                    </x-sidebar-link>
-
-                    {{-- Point of Sale --}}
-                    <x-sidebar-link route="pos.index" :active="request()->routeIs('pos.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
-                            </svg>
-                        </x-slot>
-                        Point of Sale
-                    </x-sidebar-link>
-
-                    {{-- Categories --}}
-                    <x-sidebar-link route="categories.index" :active="request()->routeIs('categories.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                            </svg>
-                        </x-slot>
-                        Categories
-                    </x-sidebar-link>
-
-                    {{-- Products --}}
-                    <x-sidebar-link route="products.index" :active="request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                            </svg>
-                        </x-slot>
-                        Products
-                    </x-sidebar-link>
-
-                    {{-- Print Labels --}}
-                    <x-sidebar-link route="labels.index" :active="request()->routeIs('labels.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-                            </svg>
-                        </x-slot>
-                        Print Labels
-                    </x-sidebar-link>
-
-                    {{-- Inventory --}}
-                    <x-sidebar-link route="inventory.index" :active="request()->routeIs('inventory.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
-                            </svg>
-                        </x-slot>
-                        Inventory
-                    </x-sidebar-link>
-
-                    {{-- Suppliers --}}
-                    <x-sidebar-link route="suppliers.index" :active="request()->routeIs('suppliers.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                            </svg>
-                        </x-slot>
-                        Suppliers
-                    </x-sidebar-link>
-
-                    {{-- Purchases --}}
-                    <x-sidebar-link route="purchases.index" :active="request()->routeIs('purchases.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
-                        </x-slot>
-                        Purchases
-                    </x-sidebar-link>
-
-                    {{-- Sales Returns --}}
-                    <x-sidebar-link route="returns.sales" :active="request()->routeIs('returns.sales')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 10h10a4 4 0 014 4v1m-7-9l-3 3 3 3"/>
-                            </svg>
-                        </x-slot>
-                        Sales Returns
-                    </x-sidebar-link>
-
-                    {{-- Purchase Returns --}}
-                    <x-sidebar-link route="returns.purchases" :active="request()->routeIs('returns.purchases')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 10H11a4 4 0 00-4 4v1m7-9l3 3-3 3"/>
-                            </svg>
-                        </x-slot>
-                        Purchase Returns
-                    </x-sidebar-link>
-
-                    {{-- Customers --}}
-                    <x-sidebar-link route="roles.index" :active="request()->routeIs('roles.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 018.382 3.042M9 12l2 2 4-4m5.618 4.016A11.955 11.955 0 0112 21.056a11.955 11.955 0 018.382-3.042"/>
-                            </svg>
-                        </x-slot>
-                        Roles & Permissions
-                    </x-sidebar-link>
-                    <x-sidebar-link route="users.index" :active="request()->routeIs('users.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                            </svg>
-                        </x-slot>
-                        Users
-                    </x-sidebar-link>
-
-                    {{-- Expenses --}}
-                    <x-sidebar-link route="expenses.index" :active="request()->routeIs('expenses.*')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
-                        </x-slot>
-                        Expenses
-                    </x-sidebar-link>
-
-                    {{-- Advance Accounting (collapsible parent with submenu) --}}
-                    <div x-data="{ accountingOpen: {{ request()->routeIs('accounting.*') ? 'true' : 'false' }} }">
-                        <button
-                            type="button"
-                            @click="accountingOpen = !accountingOpen"
-                            title="Advance Accounting"
-                            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
-                            style="{{ request()->routeIs('accounting.*') ? 'color:#fff;' : 'color:#94a3b8;' }}"
-                            onmouseover="this.style.color='#fff'; this.style.background='#1a3e52';"
-                            onmouseout="this.style.color='{{ request()->routeIs('accounting.*') ? '#fff' : '#94a3b8' }}'; this.style.background='';"
-                        >
-                            <span class="flex-shrink-0">
-                                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M3 3v18h18M9 17V9m4 8V5m4 12v-6"/>
-                                </svg>
-                            </span>
-                            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Advance Accounting</span>
-                            <svg x-show="sidebarOpen" :class="accountingOpen ? 'rotate-90' : ''"
-                                 class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </button>
-
-                        {{-- Submenu --}}
-                        <div x-show="accountingOpen && sidebarOpen"
-                             x-transition:enter="transition-all ease-out duration-200"
-                             x-transition:enter-start="opacity-0 -translate-y-1"
-                             x-transition:enter-end="opacity-100 translate-y-0"
-                             class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
-                            <x-sidebar-link route="accounting.profit-loss" :active="request()->routeIs('accounting.profit-loss')" :open="true">
-                                <x-slot name="icon">
-                                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
-                                    </svg>
-                                </x-slot>
-                                Profit and Loss
-                            </x-sidebar-link>
-                        </div>
-                    </div>
-
-                    {{-- Reports section --}}
-                    <div class="pt-3">
-                        <p x-show="sidebarOpen" class="px-2 mb-1 text-xs font-bold uppercase tracking-widest" style="color:#4a7c94;">Reports</p>
-                        <p x-show="!sidebarOpen" class="px-2 mb-1 border-t" style="border-color:#1a3e52;"></p>
-                    </div>
-
-                    <x-sidebar-link route="reports.sales" :active="request()->routeIs('reports.sales')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                            </svg>
-                        </x-slot>
-                        Sales Report
-                    </x-sidebar-link>
-
-                    <x-sidebar-link route="reports.inventory" :active="request()->routeIs('reports.inventory')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                            </svg>
-                        </x-slot>
-                        Inventory Report
-                    </x-sidebar-link>
-
-                    <x-sidebar-link route="reports.financial" :active="request()->routeIs('reports.financial')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                        </x-slot>
-                        Financial Report
-                    </x-sidebar-link>
-
-                    <x-sidebar-link route="reports.profit-loss" :active="request()->routeIs('reports.profit-loss')" :open="true">
-                        <x-slot name="icon">
-                            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/>
-                            </svg>
-                        </x-slot>
-                        Profit and Loss
-                    </x-sidebar-link>
-
-                    <x-sidebar-link route="reports.product-movement" :active="request()->routeIs('reports.product-movement')" :open="true">
-        <x-slot name="icon">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
-            </svg>
-        </x-slot>
-        Product Movement
-    </x-sidebar-link>
-    <x-sidebar-link route="reports.audit-trail" :active="request()->routeIs('reports.audit-trail')" :open="true">
-        <x-slot name="icon">
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M9 12h3m3 0h3M9 16h6m-9-8h12a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2z"/>
-            </svg>
-        </x-slot>
-        Audit Trail
+    {{-- ── Dashboard ── --}}
+    <x-sidebar-link route="dashboard" :active="request()->routeIs('dashboard')" :open="true">
+        <x-slot name="icon"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></x-slot>
+        Dashboard
     </x-sidebar-link>
 
-                </nav>
+    {{-- ── Point of Sale ── --}}
+    <x-sidebar-link route="pos.index" :active="request()->routeIs('pos.*')" :open="true">
+        <x-slot name="icon"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></x-slot>
+        Point of Sale
+    </x-sidebar-link>
+
+    {{-- ── Divider ── --}}
+    <div class="my-2 border-t" style="border-color:#1a3e52;"></div>
+
+    {{-- ════ CATALOG group ════ --}}
+    @php $catalogActive = request()->routeIs('categories.*') || request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit') || request()->routeIs('labels.*'); @endphp
+    <div x-data="{ open: {{ $catalogActive ? 'true' : 'false' }} }">
+        <button type="button" @click="open = !open"
+            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+            style="{{ $catalogActive ? 'background:#14b8a6;color:#fff;' : 'color:#94a3b8;' }}"
+            onmouseover="if(!{{ $catalogActive ? 'true' : 'false' }}){this.style.background='#1a3e52';this.style.color='#fff';}"
+            onmouseout="if(!{{ $catalogActive ? 'true' : 'false' }}){this.style.background='';this.style.color='#94a3b8';}">
+            <span class="flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></span>
+            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Catalog</span>
+            <svg x-show="sidebarOpen" :class="open ? 'rotate-90' : ''" class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="open && sidebarOpen" x-transition:enter="transition-all ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+            <x-sidebar-link route="categories.index" :active="request()->routeIs('categories.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></x-slot>
+                Categories
+            </x-sidebar-link>
+            <x-sidebar-link route="products.index" :active="request()->routeIs('products.index') || request()->routeIs('products.create') || request()->routeIs('products.edit')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></x-slot>
+                Products
+            </x-sidebar-link>
+            <x-sidebar-link route="labels.index" :active="request()->routeIs('labels.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg></x-slot>
+                Print Labels
+            </x-sidebar-link>
+        </div>
+    </div>
+
+    {{-- ── Inventory ── --}}
+    <x-sidebar-link route="inventory.index" :active="request()->routeIs('inventory.*')" :open="true">
+        <x-slot name="icon"><svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></x-slot>
+        Inventory
+    </x-sidebar-link>
+
+    {{-- ════ PROCUREMENT group ════ --}}
+    @php $procActive = request()->routeIs('suppliers.*') || request()->routeIs('purchases.*') || request()->routeIs('returns.purchases'); @endphp
+    <div x-data="{ open: {{ $procActive ? 'true' : 'false' }} }">
+        <button type="button" @click="open = !open"
+            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+            style="{{ $procActive ? 'background:#14b8a6;color:#fff;' : 'color:#94a3b8;' }}"
+            onmouseover="if(!{{ $procActive ? 'true' : 'false' }}){this.style.background='#1a3e52';this.style.color='#fff';}"
+            onmouseout="if(!{{ $procActive ? 'true' : 'false' }}){this.style.background='';this.style.color='#94a3b8';}">
+            <span class="flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span>
+            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Procurement</span>
+            <svg x-show="sidebarOpen" :class="open ? 'rotate-90' : ''" class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="open && sidebarOpen" x-transition:enter="transition-all ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+            <x-sidebar-link route="suppliers.index" :active="request()->routeIs('suppliers.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></x-slot>
+                Suppliers
+            </x-sidebar-link>
+            <x-sidebar-link route="purchases.index" :active="request()->routeIs('purchases.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></x-slot>
+                Purchases
+            </x-sidebar-link>
+            <x-sidebar-link route="returns.purchases" :active="request()->routeIs('returns.purchases')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 10H11a4 4 0 00-4 4v1m7-9l3 3-3 3"/></svg></x-slot>
+                Purchase Returns
+            </x-sidebar-link>
+        </div>
+    </div>
+
+    {{-- ════ SALES group ════ --}}
+    @php $salesActive = request()->routeIs('returns.sales'); @endphp
+    <div x-data="{ open: {{ $salesActive ? 'true' : 'false' }} }">
+        <button type="button" @click="open = !open"
+            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+            style="{{ $salesActive ? 'background:#14b8a6;color:#fff;' : 'color:#94a3b8;' }}"
+            onmouseover="if(!{{ $salesActive ? 'true' : 'false' }}){this.style.background='#1a3e52';this.style.color='#fff';}"
+            onmouseout="if(!{{ $salesActive ? 'true' : 'false' }}){this.style.background='';this.style.color='#94a3b8';}">
+            <span class="flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg></span>
+            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Sales</span>
+            <svg x-show="sidebarOpen" :class="open ? 'rotate-90' : ''" class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="open && sidebarOpen" x-transition:enter="transition-all ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+            <x-sidebar-link route="returns.sales" :active="request()->routeIs('returns.sales')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a4 4 0 014 4v1m-7-9l-3 3 3 3"/></svg></x-slot>
+                Sales Returns
+            </x-sidebar-link>
+        </div>
+    </div>
+
+    {{-- ════ FINANCE group ════ --}}
+    @php $finActive = request()->routeIs('expenses.*') || request()->routeIs('accounting.*'); @endphp
+    <div x-data="{ open: {{ $finActive ? 'true' : 'false' }} }">
+        <button type="button" @click="open = !open"
+            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+            style="{{ $finActive ? 'background:#14b8a6;color:#fff;' : 'color:#94a3b8;' }}"
+            onmouseover="if(!{{ $finActive ? 'true' : 'false' }}){this.style.background='#1a3e52';this.style.color='#fff';}"
+            onmouseout="if(!{{ $finActive ? 'true' : 'false' }}){this.style.background='';this.style.color='#94a3b8';}">
+            <span class="flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></span>
+            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Finance</span>
+            <svg x-show="sidebarOpen" :class="open ? 'rotate-90' : ''" class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="open && sidebarOpen" x-transition:enter="transition-all ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+            <x-sidebar-link route="expenses.index" :active="request()->routeIs('expenses.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></x-slot>
+                Expenses
+            </x-sidebar-link>
+            <x-sidebar-link route="accounting.profit-loss" :active="request()->routeIs('accounting.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3v18h18M9 17V9m4 8V5m4 12v-6"/></svg></x-slot>
+                Accounting
+            </x-sidebar-link>
+        </div>
+    </div>
+
+    {{-- ── Divider ── --}}
+    <div class="my-2 border-t" style="border-color:#1a3e52;"></div>
+
+    {{-- ════ REPORTS group ════ --}}
+    @php $repActive = request()->routeIs('reports.*'); @endphp
+    <div x-data="{ open: {{ $repActive ? 'true' : 'false' }} }">
+        <button type="button" @click="open = !open"
+            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+            style="{{ $repActive ? 'background:#14b8a6;color:#fff;' : 'color:#94a3b8;' }}"
+            onmouseover="if(!{{ $repActive ? 'true' : 'false' }}){this.style.background='#1a3e52';this.style.color='#fff';}"
+            onmouseout="if(!{{ $repActive ? 'true' : 'false' }}){this.style.background='';this.style.color='#94a3b8';}">
+            <span class="flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></span>
+            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Reports</span>
+            <svg x-show="sidebarOpen" :class="open ? 'rotate-90' : ''" class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="open && sidebarOpen" x-transition:enter="transition-all ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+            <x-sidebar-link route="reports.sales" :active="request()->routeIs('reports.sales')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></x-slot>
+                Sales Report
+            </x-sidebar-link>
+            <x-sidebar-link route="reports.inventory" :active="request()->routeIs('reports.inventory')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></x-slot>
+                Inventory Report
+            </x-sidebar-link>
+            <x-sidebar-link route="reports.financial" :active="request()->routeIs('reports.financial')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></x-slot>
+                Financial Report
+            </x-sidebar-link>
+            <x-sidebar-link route="reports.profit-loss" :active="request()->routeIs('reports.profit-loss')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m4 11H5a2 2 0 01-2-2V5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2z"/></svg></x-slot>
+                Profit & Loss
+            </x-sidebar-link>
+            <x-sidebar-link route="reports.product-movement" :active="request()->routeIs('reports.product-movement')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg></x-slot>
+                Product Movement
+            </x-sidebar-link>
+            <x-sidebar-link route="reports.audit-trail" :active="request()->routeIs('reports.audit-trail')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h3m3 0h3M9 16h6m-9-8h12a2 2 0 012 2v7a2 2 0 01-2 2H6a2 2 0 01-2-2V10a2 2 0 012-2z"/></svg></x-slot>
+                Audit Trail
+            </x-sidebar-link>
+        </div>
+    </div>
+
+    {{-- ── Divider ── --}}
+    <div class="my-2 border-t" style="border-color:#1a3e52;"></div>
+
+    {{-- ════ ADMINISTRATION group ════ --}}
+    @php $adminActive = request()->routeIs('users.*') || request()->routeIs('roles.*'); @endphp
+    <div x-data="{ open: {{ $adminActive ? 'true' : 'false' }} }">
+        <button type="button" @click="open = !open"
+            class="w-full flex items-center gap-3 px-2 py-2 rounded-lg text-sm font-medium transition-colors duration-150"
+            style="{{ $adminActive ? 'background:#14b8a6;color:#fff;' : 'color:#94a3b8;' }}"
+            onmouseover="if(!{{ $adminActive ? 'true' : 'false' }}){this.style.background='#1a3e52';this.style.color='#fff';}"
+            onmouseout="if(!{{ $adminActive ? 'true' : 'false' }}){this.style.background='';this.style.color='#94a3b8';}">
+            <span class="flex-shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></span>
+            <span x-show="sidebarOpen" class="truncate flex-1 text-left">Administration</span>
+            <svg x-show="sidebarOpen" :class="open ? 'rotate-90' : ''" class="w-4 h-4 flex-shrink-0 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <div x-show="open && sidebarOpen" x-transition:enter="transition-all ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-1 ml-4 pl-3 space-y-1 border-l" style="border-color:#1a3e52;">
+            <x-sidebar-link route="users.index" :active="request()->routeIs('users.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></x-slot>
+                Users
+            </x-sidebar-link>
+            <x-sidebar-link route="roles.index" :active="request()->routeIs('roles.*')" :open="true">
+                <x-slot name="icon"><svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 018.382 3.042M9 12l2 2 4-4m5.618 4.016A11.955 11.955 0 0112 21.056a11.955 11.955 0 018.382-3.042"/></svg></x-slot>
+                Roles & Permissions
+            </x-sidebar-link>
+        </div>
+    </div>
+
+</nav>
 
                 {{-- User footer --}}
                 <div class="flex-shrink-0 border-t px-3 py-3" style="border-color:#1a3e52;">
