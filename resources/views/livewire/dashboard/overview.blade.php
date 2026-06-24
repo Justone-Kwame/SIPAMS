@@ -1,4 +1,4 @@
-<div class="min-h-full bg-red-600 p-8">
+<div class="min-h-full bg-gray-600 p-8">
 
     {{-- ══════════ PAGE HEADER & GREETING ══════════ --}}
     <div class="flex items-center justify-between mb-8">
