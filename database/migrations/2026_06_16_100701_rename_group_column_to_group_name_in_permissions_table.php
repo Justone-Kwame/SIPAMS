@@ -6,23 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->renameColumn('group', 'group_name');
-        });
+        if (Schema::hasColumn('permissions', 'group') && !Schema::hasColumn('permissions', 'group_name')) {
+            Schema::table('permissions', function (Blueprint $table) {
+                $table->renameColumn('group', 'group_name');
+            });
+        }
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::table('permissions', function (Blueprint $table) {
-            $table->renameColumn('group_name', 'group');
-        });
+        if (Schema::hasColumn('permissions', 'group_name') && !Schema::hasColumn('permissions', 'group')) {
+            Schema::table('permissions', function (Blueprint $table) {
+                $table->renameColumn('group_name', 'group');
+            });
+        }
     }
 };
