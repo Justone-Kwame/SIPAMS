@@ -1,147 +1,571 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIPAMS — Smart Inventory & POS Management</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        <title>Laravel</title>
+        :root {
+            --teal:   #0d9488;
+            --teal-d: #0f766e;
+            --teal-l: #ccfbf1;
+            --dark:   #0e2a38;
+            --dark2:  #1a3e52;
+            --gray:   #6b7280;
+            --light:  #f0fdfb;
+        }
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-            <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Figtree', sans-serif; color: #1f2937; background: #fff; }
 
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 0 5%; height: 68px;
+            background: rgba(255,255,255,.9);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(13,148,136,.15);
+            transition: box-shadow .3s;
+        }
+        nav.scrolled { box-shadow: 0 2px 20px rgba(0,0,0,.08); }
+        .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .nav-logo {
+            width: 38px; height: 38px; border-radius: 10px;
+            background: var(--teal); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 900;
+        }
+        .nav-name { font-size: 20px; font-weight: 800; color: var(--dark); letter-spacing: -.3px; }
+        .nav-name span { color: var(--teal); }
+        .nav-links { display: flex; align-items: center; gap: 8px; }
+        .btn-ghost {
+            padding: 8px 20px; border-radius: 8px; font-size: 14px; font-weight: 600;
+            color: var(--dark); text-decoration: none; transition: background .2s;
+        }
+        .btn-ghost:hover { background: var(--light); }
+        .btn-primary {
+            padding: 9px 22px; border-radius: 8px; font-size: 14px; font-weight: 700;
+            background: var(--teal); color: #fff; text-decoration: none;
+            transition: background .2s, transform .15s;
+        }
+        .btn-primary:hover { background: var(--teal-d); transform: translateY(-1px); }
 
-        <!-- Styles -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="antialiased font-sans">
-        <div class="bg-gray-50 text-black/50 dark:bg-black dark:text-white/50">
-            <img id="background" class="absolute -left-20 top-0 max-w-[877px]" src="https://laravel.com/assets/img/welcome/background.svg" />
-            <div class="relative min-h-screen flex flex-col items-center justify-center selection:bg-[#FF2D20] selection:text-white">
-                <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
-                    <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
-                        <div class="flex lg:justify-center lg:col-start-2">
-                            <svg class="h-12 w-auto text-white lg:h-16 lg:text-[#FF2D20]" viewBox="0 0 62 65" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M61.8548 14.6253C61.8778 14.7102 61.8895 14.7978 61.8897 14.8858V28.5615C61.8898 28.737 61.8434 28.9095 61.7554 29.0614C61.6675 29.2132 61.5409 29.3392 61.3887 29.4265L49.9104 36.0351V49.1337C49.9104 49.4902 49.7209 49.8192 49.4118 49.9987L25.4519 63.7916C25.3971 63.8227 25.3372 63.8427 25.2774 63.8639C25.255 63.8714 25.2338 63.8851 25.2101 63.8913C25.0426 63.9354 24.8666 63.9354 24.6991 63.8913C24.6716 63.8838 24.6467 63.8689 24.6205 63.8589C24.5657 63.8389 24.5084 63.8215 24.456 63.7916L0.501061 49.9987C0.348882 49.9113 0.222437 49.7853 0.134469 49.6334C0.0465019 49.4816 0.000120578 49.3092 0 49.1337L0 8.10652C0 8.01678 0.0124642 7.92953 0.0348998 7.84477C0.0423783 7.8161 0.0598282 7.78993 0.0697995 7.76126C0.0884958 7.70891 0.105946 7.65531 0.133367 7.6067C0.152063 7.5743 0.179485 7.54812 0.20192 7.51821C0.230588 7.47832 0.256763 7.43719 0.290416 7.40229C0.319084 7.37362 0.356476 7.35243 0.388883 7.32751C0.425029 7.29759 0.457436 7.26518 0.498568 7.2415L12.4779 0.345059C12.6296 0.257786 12.8015 0.211853 12.9765 0.211853C13.1515 0.211853 13.3234 0.257786 13.475 0.345059L25.4531 7.2415H25.4556C25.4955 7.26643 25.5292 7.29759 25.5653 7.32626C25.5977 7.35119 25.6339 7.37362 25.6625 7.40104C25.6974 7.43719 25.7224 7.47832 25.7523 7.51821C25.7735 7.54812 25.8021 7.5743 25.8196 7.6067C25.8483 7.65656 25.8645 7.70891 25.8844 7.76126C25.8944 7.78993 25.9118 7.8161 25.9193 7.84602C25.9423 7.93096 25.954 8.01853 25.9542 8.10652V33.7317L35.9355 27.9844V14.8846C35.9355 14.7973 35.948 14.7088 35.9704 14.6253C35.9792 14.5954 35.9954 14.5692 36.0053 14.5405C36.0253 14.4882 36.0427 14.4346 36.0702 14.386C36.0888 14.3536 36.1163 14.3274 36.1375 14.2975C36.1674 14.2576 36.1923 14.2165 36.2272 14.1816C36.2559 14.1529 36.292 14.1317 36.3244 14.1068C36.3618 14.0769 36.3942 14.0445 36.4341 14.0208L48.4147 7.12434C48.5663 7.03694 48.7383 6.99094 48.9133 6.99094C49.0883 6.99094 49.2602 7.03694 49.4118 7.12434L61.3899 14.0208C61.4323 14.0457 61.4647 14.0769 61.5021 14.1055C61.5333 14.1305 61.5694 14.1529 61.5981 14.1803C61.633 14.2165 61.6579 14.2576 61.6878 14.2975C61.7103 14.3274 61.7377 14.3536 61.7551 14.386C61.7838 14.4346 61.8 14.4882 61.8199 14.5405C61.8312 14.5692 61.8474 14.5954 61.8548 14.6253ZM59.893 27.9844V16.6121L55.7013 19.0252L49.9104 22.3593V33.7317L59.8942 27.9844H59.893ZM47.9149 48.5566V37.1768L42.2187 40.4299L25.953 49.7133V61.2003L47.9149 48.5566ZM1.99677 9.83281V48.5566L23.9562 61.199V49.7145L12.4841 43.2219L12.4804 43.2194L12.4754 43.2169C12.4368 43.1945 12.4044 43.1621 12.3682 43.1347C12.3371 43.1097 12.3009 43.0898 12.2735 43.0624L12.271 43.0586C12.2386 43.0275 12.2162 42.9888 12.1887 42.9539C12.1638 42.9203 12.1339 42.8916 12.114 42.8567L12.1127 42.853C12.0903 42.8156 12.0766 42.7707 12.0604 42.7283C12.0442 42.6909 12.023 42.656 12.013 42.6161C12.0005 42.5688 11.998 42.5177 11.9931 42.4691C11.9881 42.4317 11.9781 42.3943 11.9781 42.3569V15.5801L6.18848 12.2446L1.99677 9.83281ZM12.9777 2.36177L2.99764 8.10652L12.9752 13.8513L22.9541 8.10527L12.9752 2.36177H12.9777ZM18.1678 38.2138L23.9574 34.8809V9.83281L19.7657 12.2459L13.9749 15.5801V40.6281L18.1678 38.2138ZM48.9133 9.14105L38.9344 14.8858L48.9133 20.6305L58.8909 14.8846L48.9133 9.14105ZM47.9149 22.3593L42.124 19.0252L37.9323 16.6121V27.9844L43.7219 31.3174L47.9149 33.7317V22.3593ZM24.9533 47.987L39.59 39.631L46.9065 35.4555L36.9352 29.7145L25.4544 36.3242L14.9907 42.3482L24.9533 47.987Z" fill="currentColor"/></svg>
-                        </div>
-                        @if (Route::has('login'))
-                            <livewire:welcome.navigation />
-                        @endif
-                    </header>
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 100px 5% 60px;
+            background: linear-gradient(160deg, #fff 0%, var(--light) 50%, #e0f7f4 100%);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: -120px; right: -120px;
+            width: 500px; height: 500px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(13,148,136,.12) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero::after {
+            content: '';
+            position: absolute; bottom: -80px; left: -80px;
+            width: 360px; height: 360px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(13,148,136,.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero-inner { max-width: 780px; position: relative; z-index: 1; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--teal-l); color: var(--teal-d);
+            padding: 6px 16px; border-radius: 99px;
+            font-size: 13px; font-weight: 700; letter-spacing: .3px;
+            margin-bottom: 28px;
+        }
+        .hero-badge svg { width: 14px; height: 14px; }
+        h1 {
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 900; line-height: 1.1;
+            color: var(--dark); letter-spacing: -.5px;
+            margin-bottom: 20px;
+        }
+        h1 .accent { color: var(--teal); }
+        .hero-sub {
+            font-size: 1.15rem; color: var(--gray);
+            line-height: 1.7; max-width: 580px; margin: 0 auto 40px;
+        }
+        .hero-cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+        .btn-hero {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: 10px; font-size: 15px;
+            font-weight: 700; text-decoration: none; transition: all .2s;
+        }
+        .btn-hero-primary {
+            background: var(--teal); color: #fff;
+            box-shadow: 0 4px 20px rgba(13,148,136,.35);
+        }
+        .btn-hero-primary:hover { background: var(--teal-d); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(13,148,136,.4); }
+        .btn-hero-secondary {
+            background: #fff; color: var(--dark);
+            border: 1.5px solid #e2e8f0;
+        }
+        .btn-hero-secondary:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-1px); }
 
-                    <main class="mt-6">
-                        <div class="grid gap-6 lg:grid-cols-2 lg:gap-8">
-                            <a
-                                href="https://laravel.com/docs"
-                                id="docs-card"
-                                class="flex flex-col items-start gap-6 overflow-hidden rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] md:row-span-3 lg:p-10 lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                            >
-                                <div id="screenshot-container" class="relative flex w-full flex-1 items-stretch">
-                                    <img
-                                        src="https://laravel.com/assets/img/welcome/docs-light.svg"
-                                        alt="Laravel documentation screenshot"
-                                        class="aspect-video h-full w-full flex-1 rounded-[10px] object-top object-cover drop-shadow-[0px_4px_34px_rgba(0,0,0,0.06)] dark:hidden"
-                                        onerror="
-                                            document.getElementById('screenshot-container').classList.add('!hidden');
-                                            document.getElementById('docs-card').classList.add('!row-span-1');
-                                            document.getElementById('docs-card-content').classList.add('!flex-row');
-                                            document.getElementById('background').classList.add('!hidden');
-                                        "
-                                    />
-                                    <img
-                                        src="https://laravel.com/assets/img/welcome/docs-dark.svg"
-                                        alt="Laravel documentation screenshot"
-                                        class="hidden aspect-video h-full w-full flex-1 rounded-[10px] object-top object-cover drop-shadow-[0px_4px_34px_rgba(0,0,0,0.25)] dark:block"
-                                    />
-                                    <div
-                                        class="absolute -bottom-16 -left-16 h-40 w-[calc(100%+8rem)] bg-gradient-to-b from-transparent via-white to-white dark:via-zinc-900 dark:to-zinc-900"
-                                    ></div>
-                                </div>
+        /* ── STATS ── */
+        .stats {
+            background: var(--dark);
+            padding: 48px 5%;
+        }
+        .stats-grid {
+            max-width: 900px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0; text-align: center;
+        }
+        .stat-item {
+            padding: 20px 24px;
+            border-right: 1px solid rgba(255,255,255,.08);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num {
+            font-size: 2.2rem; font-weight: 900;
+            color: var(--teal); line-height: 1;
+            margin-bottom: 6px;
+        }
+        .stat-label { font-size: 13px; color: #94a3b8; font-weight: 500; }
 
-                                <div class="relative flex items-center gap-6 lg:items-end">
-                                    <div id="docs-card-content" class="flex items-start gap-6 lg:flex-col">
-                                        <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                            <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><path fill="#FF2D20" d="M23 4a1 1 0 0 0-1.447-.894L12.224 7.77a.5.5 0 0 1-.448 0L2.447 3.106A1 1 0 0 0 1 4v13.382a1.99 1.99 0 0 0 1.105 1.79l9.448 4.728c.14.065.293.1.447.1.154-.005.306-.04.447-.105l9.453-4.724a1.99 1.99 0 0 0 1.1-1.789V4ZM3 6.023a.25.25 0 0 1 .362-.223l7.5 3.75a.251.251 0 0 1 .138.223v11.2a.25.25 0 0 1-.362.224l-7.5-3.75a.25.25 0 0 1-.138-.22V6.023Zm18 11.2a.25.25 0 0 1-.138.224l-7.5 3.75a.249.249 0 0 1-.329-.099.249.249 0 0 1-.033-.12V9.772a.251.251 0 0 1 .138-.224l7.5-3.75a.25.25 0 0 1 .362.224v11.2Z"/><path fill="#FF2D20" d="m3.55 1.893 8 4.048a1.008 1.008 0 0 0 .9 0l8-4.048a1 1 0 0 0-.9-1.785l-7.322 3.706a.506.506 0 0 1-.452 0L4.454.108a1 1 0 0 0-.9 1.785H3.55Z"/></svg>
-                                        </div>
+        /* ── SECTION COMMONS ── */
+        section { padding: 90px 5%; }
+        .section-label {
+            display: inline-block;
+            font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase;
+            color: var(--teal); margin-bottom: 12px;
+        }
+        .section-title {
+            font-size: clamp(1.7rem, 4vw, 2.4rem);
+            font-weight: 800; color: var(--dark);
+            letter-spacing: -.3px; line-height: 1.2;
+            margin-bottom: 14px;
+        }
+        .section-sub { color: var(--gray); font-size: 1rem; line-height: 1.7; max-width: 540px; }
+        .section-header { margin-bottom: 56px; }
 
-                                        <div class="pt-3 sm:pt-5 lg:pt-0">
-                                            <h2 class="text-xl font-semibold text-black dark:text-white">Documentation</h2>
+        /* ── FEATURES ── */
+        .features { background: #fff; }
+        .features-grid {
+            max-width: 1100px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+        }
+        .feature-card {
+            background: #fff; border: 1.5px solid #e5e7eb;
+            border-radius: 16px; padding: 28px;
+            transition: border-color .25s, box-shadow .25s, transform .25s;
+        }
+        .feature-card:hover {
+            border-color: var(--teal);
+            box-shadow: 0 8px 32px rgba(13,148,136,.12);
+            transform: translateY(-4px);
+        }
+        .feature-icon {
+            width: 48px; height: 48px; border-radius: 12px;
+            background: var(--teal-l);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 18px;
+        }
+        .feature-icon svg { width: 24px; height: 24px; color: var(--teal); stroke: var(--teal); }
+        .feature-title { font-size: 1.05rem; font-weight: 700; color: var(--dark); margin-bottom: 8px; }
+        .feature-desc { font-size: .9rem; color: var(--gray); line-height: 1.65; }
 
-                                            <p class="mt-4 text-sm/relaxed">
-                                                Laravel has wonderful documentation covering every aspect of the framework. Whether you are a newcomer or have prior experience with Laravel, we recommend reading our documentation from beginning to end.
-                                            </p>
-                                        </div>
-                                    </div>
+        /* ── HOW IT WORKS ── */
+        .how { background: var(--light); }
+        .how-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; }
+        .how-steps { display: flex; flex-direction: column; gap: 28px; }
+        .how-step { display: flex; gap: 18px; align-items: flex-start; }
+        .step-num {
+            flex-shrink: 0; width: 38px; height: 38px; border-radius: 10px;
+            background: var(--teal); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 15px; font-weight: 800;
+        }
+        .step-content h3 { font-size: 1rem; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+        .step-content p  { font-size: .875rem; color: var(--gray); line-height: 1.6; }
+        .how-visual {
+            background: var(--dark); border-radius: 20px;
+            padding: 28px; box-shadow: 0 20px 60px rgba(0,0,0,.18);
+        }
+        .mock-bar {
+            display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
+        }
+        .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .mock-title { color: #94a3b8; font-size: 12px; font-weight: 600; margin-left: auto; }
+        .mock-card {
+            background: var(--dark2); border-radius: 10px;
+            padding: 14px; margin-bottom: 10px;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .mock-card-left { display: flex; align-items: center; gap: 10px; }
+        .mock-card-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(13,148,136,.3); display: flex; align-items: center; justify-content: center; }
+        .mock-card-label { font-size: 12px; color: #e2e8f0; font-weight: 600; }
+        .mock-card-sub   { font-size: 10px; color: #64748b; }
+        .mock-card-val   { font-size: 13px; font-weight: 800; color: var(--teal); }
+        .mock-chart-bars { display: flex; align-items: flex-end; gap: 6px; height: 60px; margin-top: 16px; }
+        .mock-bar-item { flex: 1; background: rgba(13,148,136,.25); border-radius: 4px 4px 0 0; transition: background .3s; }
+        .mock-bar-item.active { background: var(--teal); }
 
-                                    <svg class="size-6 shrink-0 stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
-                                </div>
-                            </a>
+        /* ── MODULES ── */
+        .modules { background: #fff; }
+        .modules-inner { max-width: 1100px; margin: 0 auto; }
+        .modules-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+        .module-pill {
+            display: flex; align-items: center; gap: 12px;
+            padding: 16px 20px; border-radius: 12px;
+            border: 1.5px solid #e5e7eb;
+            text-decoration: none; transition: all .2s;
+        }
+        .module-pill:hover { border-color: var(--teal); background: var(--light); }
+        .module-pill-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--teal-l); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .module-pill-icon svg { width: 18px; height: 18px; stroke: var(--teal); }
+        .module-pill-text { font-size: .9rem; font-weight: 600; color: var(--dark); }
 
-                            <a
-                                href="https://laracasts.com"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                            >
-                                <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                    <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g fill="#FF2D20"><path d="M24 8.25a.5.5 0 0 0-.5-.5H.5a.5.5 0 0 0-.5.5v12a2.5 2.5 0 0 0 2.5 2.5h19a2.5 2.5 0 0 0 2.5-2.5v-12Zm-7.765 5.868a1.221 1.221 0 0 1 0 2.264l-6.626 2.776A1.153 1.153 0 0 1 8 18.123v-5.746a1.151 1.151 0 0 1 1.609-1.035l6.626 2.776ZM19.564 1.677a.25.25 0 0 0-.177-.427H15.6a.106.106 0 0 0-.072.03l-4.54 4.543a.25.25 0 0 0 .177.427h3.783c.027 0 .054-.01.073-.03l4.543-4.543ZM22.071 1.318a.047.047 0 0 0-.045.013l-4.492 4.492a.249.249 0 0 0 .038.385.25.25 0 0 0 .14.042h5.784a.5.5 0 0 0 .5-.5v-2a2.5 2.5 0 0 0-1.925-2.432ZM13.014 1.677a.25.25 0 0 0-.178-.427H9.101a.106.106 0 0 0-.073.03l-4.54 4.543a.25.25 0 0 0 .177.427H8.4a.106.106 0 0 0 .073-.03l4.54-4.543ZM6.513 1.677a.25.25 0 0 0-.177-.427H2.5A2.5 2.5 0 0 0 0 3.75v2a.5.5 0 0 0 .5.5h1.4a.106.106 0 0 0 .073-.03l4.54-4.543Z"/></g></svg>
-                                </div>
+        /* ── CTA BANNER ── */
+        .cta-banner {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%);
+            padding: 80px 5%; text-align: center;
+        }
+        .cta-banner h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 800; color: #fff; margin-bottom: 14px; }
+        .cta-banner p { color: #94a3b8; font-size: 1rem; margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto; }
 
-                                <div class="pt-3 sm:pt-5">
-                                    <h2 class="text-xl font-semibold text-black dark:text-white">Laracasts</h2>
+        /* ── FOOTER ── */
+        footer {
+            background: var(--dark); border-top: 1px solid rgba(255,255,255,.06);
+            padding: 40px 5% 28px;
+        }
+        .footer-inner {
+            max-width: 1100px; margin: 0 auto;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 16px;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 10px; }
+        .footer-logo { width: 32px; height: 32px; border-radius: 8px; background: var(--teal); display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 900; color: #fff; }
+        .footer-name { font-size: 16px; font-weight: 800; color: #fff; }
+        .footer-copy { font-size: 13px; color: #475569; }
+        .footer-links { display: flex; gap: 20px; }
+        .footer-links a { font-size: 13px; color: #64748b; text-decoration: none; transition: color .2s; }
+        .footer-links a:hover { color: var(--teal); }
 
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Laracasts offers thousands of video tutorials on Laravel, PHP, and JavaScript development. Check them out, see for yourself, and massively level up your development skills in the process.
-                                    </p>
-                                </div>
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {
+            .how-inner { grid-template-columns: 1fr; }
+            .how-visual { display: none; }
+            .nav-links .btn-ghost { display: none; }
+            .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); }
+            .stat-item:last-child { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
 
-                                <svg class="size-6 shrink-0 self-center stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
-                            </a>
+<!-- NAV -->
+<nav id="navbar">
+    <a href="/" class="nav-brand">
+        <div class="nav-logo">S</div>
+        <span class="nav-name">SIP<span>AMS</span></span>
+    </a>
+    <div class="nav-links">
+        <a href="#features" class="btn-ghost">Features</a>
+        <a href="#modules" class="btn-ghost">Modules</a>
+        <a href="{{ route('login') }}" class="btn-ghost">Log in</a>
+        <a href="{{ route('login') }}" class="btn-primary">Get Started →</a>
+    </div>
+</nav>
 
-                            <a
-                                href="https://laravel-news.com"
-                                class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] transition duration-300 hover:text-black/70 hover:ring-black/20 focus:outline-none focus-visible:ring-[#FF2D20] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800 dark:hover:text-white/70 dark:hover:ring-zinc-700 dark:focus-visible:ring-[#FF2D20]"
-                            >
-                                <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                    <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><g fill="#FF2D20"><path d="M8.75 4.5H5.5c-.69 0-1.25.56-1.25 1.25v4.75c0 .69.56 1.25 1.25 1.25h3.25c.69 0 1.25-.56 1.25-1.25V5.75c0-.69-.56-1.25-1.25-1.25Z"/><path d="M24 10a3 3 0 0 0-3-3h-2V2.5a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2V20a3.5 3.5 0 0 0 3.5 3.5h17A3.5 3.5 0 0 0 24 20V10ZM3.5 21.5A1.5 1.5 0 0 1 2 20V3a.5.5 0 0 1 .5-.5h14a.5.5 0 0 1 .5.5v17c0 .295.037.588.11.874a.5.5 0 0 1-.484.625L3.5 21.5ZM22 20a1.5 1.5 0 1 1-3 0V9.5a.5.5 0 0 1 .5-.5H21a1 1 0 0 1 1 1v10Z"/><path d="M12.751 6.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 7.3v-.5a.75.75 0 0 1 .751-.753ZM12.751 10.047h2a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-2A.75.75 0 0 1 12 11.3v-.5a.75.75 0 0 1 .751-.753ZM4.751 14.047h10a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-10A.75.75 0 0 1 4 15.3v-.5a.75.75 0 0 1 .751-.753ZM4.75 18.047h7.5a.75.75 0 0 1 .75.75v.5a.75.75 0 0 1-.75.75h-7.5A.75.75 0 0 1 4 19.3v-.5a.75.75 0 0 1 .75-.753Z"/></g></svg>
-                                </div>
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-badge">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            Smart Inventory &amp; POS Platform
+        </div>
+        <h1>Run Your Business<br>with <span class="accent">Confidence</span></h1>
+        <p class="hero-sub">
+            SIPAMS gives you a powerful Point of Sale, real-time inventory tracking, purchase management, and detailed reports — all in one clean, fast system.
+        </p>
+        <div class="hero-cta">
+            <a href="{{ route('login') }}" class="btn-hero btn-hero-primary">
+                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+                Sign In to Dashboard
+            </a>
+            <a href="#features" class="btn-hero btn-hero-secondary">
+                Explore Features
+            </a>
+        </div>
+    </div>
+</section>
 
-                                <div class="pt-3 sm:pt-5">
-                                    <h2 class="text-xl font-semibold text-black dark:text-white">Laravel News</h2>
+<!-- STATS -->
+<div class="stats">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-num">POS</div>
+            <div class="stat-label">Point of Sale Terminal</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">360°</div>
+            <div class="stat-label">Inventory Visibility</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">8+</div>
+            <div class="stat-label">Report Types</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">Real‑time</div>
+            <div class="stat-label">Stock Updates</div>
+        </div>
+    </div>
+</div>
 
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Laravel News is a community driven portal and newsletter aggregating all of the latest and most important news in the Laravel ecosystem, including new package releases and tutorials.
-                                    </p>
-                                </div>
+<!-- FEATURES -->
+<section class="features" id="features">
+    <div style="max-width:1100px;margin:0 auto;">
+        <div class="section-header">
+            <span class="section-label">What You Get</span>
+            <h2 class="section-title">Everything your business needs</h2>
+            <p class="section-sub">From ringing up a sale to tracking every stock movement — SIPAMS has you covered.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                </div>
+                <div class="feature-title">Point of Sale</div>
+                <div class="feature-desc">Fast, intuitive checkout with barcode scanning, multiple payment methods, discounts, and instant receipts.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </div>
+                <div class="feature-title">Inventory Management</div>
+                <div class="feature-desc">Track stock levels in real-time, set reorder alerts, manage batches, and view full movement history.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <div class="feature-title">Purchase Orders</div>
+                <div class="feature-desc">Create and track purchase orders from suppliers, manage payments, and generate professional PO PDFs.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                </div>
+                <div class="feature-title">Advanced Reports</div>
+                <div class="feature-desc">Sales, inventory, financial, profit &amp; loss, product movement, and audit trail reports with export options.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                </div>
+                <div class="feature-title">Barcode Label Printing</div>
+                <div class="feature-desc">Search or scan products, set quantities, and print professional barcode labels in multiple paper formats.</div>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="feature-title">Finance & Accounting</div>
+                <div class="feature-desc">Track expenses by category, view profit &amp; loss statements, and maintain a complete financial picture.</div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                                <svg class="size-6 shrink-0 self-center stroke-[#FF2D20]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"/></svg>
-                            </a>
-
-                            <div class="flex items-start gap-4 rounded-lg bg-white p-6 shadow-[0px_14px_34px_0px_rgba(0,0,0,0.08)] ring-1 ring-white/[0.05] lg:pb-10 dark:bg-zinc-900 dark:ring-zinc-800">
-                                <div class="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#FF2D20]/10 sm:size-16">
-                                    <svg class="size-5 sm:size-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                        <g fill="#FF2D20">
-                                            <path
-                                                d="M16.597 12.635a.247.247 0 0 0-.08-.237 2.234 2.234 0 0 1-.769-1.68c.001-.195.03-.39.084-.578a.25.25 0 0 0-.09-.267 8.8 8.8 0 0 0-4.826-1.66.25.25 0 0 0-.268.181 2.5 2.5 0 0 1-2.4 1.824.045.045 0 0 0-.045.037 12.255 12.255 0 0 0-.093 3.86.251.251 0 0 0 .208.214c2.22.366 4.367 1.08 6.362 2.118a.252.252 0 0 0 .32-.079 10.09 10.09 0 0 0 1.597-3.733ZM13.616 17.968a.25.25 0 0 0-.063-.407A19.697 19.697 0 0 0 8.91 15.98a.25.25 0 0 0-.287.325c.151.455.334.898.548 1.328.437.827.981 1.594 1.619 2.28a.249.249 0 0 0 .32.044 29.13 29.13 0 0 0 2.506-1.99ZM6.303 14.105a.25.25 0 0 0 .265-.274 13.048 13.048 0 0 1 .205-4.045.062.062 0 0 0-.022-.07 2.5 2.5 0 0 1-.777-.982.25.25 0 0 0-.271-.149 11 11 0 0 0-5.6 2.815.255.255 0 0 0-.075.163c-.008.135-.02.27-.02.406.002.8.084 1.598.246 2.381a.25.25 0 0 0 .303.193 19.924 19.924 0 0 1 5.746-.438ZM9.228 20.914a.25.25 0 0 0 .1-.393 11.53 11.53 0 0 1-1.5-2.22 12.238 12.238 0 0 1-.91-2.465.248.248 0 0 0-.22-.187 18.876 18.876 0 0 0-5.69.33.249.249 0 0 0-.179.336c.838 2.142 2.272 4 4.132 5.353a.254.254 0 0 0 .15.048c1.41-.01 2.807-.282 4.117-.802ZM18.93 12.957l-.005-.008a.25.25 0 0 0-.268-.082 2.21 2.21 0 0 1-.41.081.25.25 0 0 0-.217.2c-.582 2.66-2.127 5.35-5.75 7.843a.248.248 0 0 0-.09.299.25.25 0 0 0 .065.091 28.703 28.703 0 0 0 2.662 2.12.246.246 0 0 0 .209.037c2.579-.701 4.85-2.242 6.456-4.378a.25.25 0 0 0 .048-.189 13.51 13.51 0 0 0-2.7-6.014ZM5.702 7.058a.254.254 0 0 0 .2-.165A2.488 2.488 0 0 1 7.98 5.245a.093.093 0 0 0 .078-.062 19.734 19.734 0 0 1 3.055-4.74.25.25 0 0 0-.21-.41 12.009 12.009 0 0 0-10.4 8.558.25.25 0 0 0 .373.281 12.912 12.912 0 0 1 4.826-1.814ZM10.773 22.052a.25.25 0 0 0-.28-.046c-.758.356-1.55.635-2.365.833a.25.25 0 0 0-.022.48c1.252.43 2.568.65 3.893.65.1 0 .2 0 .3-.008a.25.25 0 0 0 .147-.444c-.526-.424-1.1-.917-1.673-1.465ZM18.744 8.436a.249.249 0 0 0 .15.228 2.246 2.246 0 0 1 1.352 2.054c0 .337-.08.67-.23.972a.25.25 0 0 0 .042.28l.007.009a15.016 15.016 0 0 1 2.52 4.6.25.25 0 0 0 .37.132.25.25 0 0 0 .096-.114c.623-1.464.944-3.039.945-4.63a12.005 12.005 0 0 0-5.78-10.258.25.25 0 0 0-.373.274c.547 2.109.85 4.274.901 6.453ZM9.61 5.38a.25.25 0 0 0 .08.31c.34.24.616.561.8.935a.25.25 0 0 0 .3.127.631.631 0 0 1 .206-.034c2.054.078 4.036.772 5.69 1.991a.251.251 0 0 0 .267.024c.046-.024.093-.047.141-.067a.25.25 0 0 0 .151-.23A29.98 29.98 0 0 0 15.957.764a.25.25 0 0 0-.16-.164 11.924 11.924 0 0 0-2.21-.518.252.252 0 0 0-.215.076A22.456 22.456 0 0 0 9.61 5.38Z"
-                                            />
-                                        </g>
-                                    </svg>
-                                </div>
-
-                                <div class="pt-3 sm:pt-5">
-                                    <h2 class="text-xl font-semibold text-black dark:text-white">Vibrant Ecosystem</h2>
-
-                                    <p class="mt-4 text-sm/relaxed">
-                                        Laravel's robust library of first-party tools and libraries, such as <a href="https://forge.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white dark:focus-visible:ring-[#FF2D20]">Forge</a>, <a href="https://vapor.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Vapor</a>, <a href="https://nova.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Nova</a>, <a href="https://envoyer.io" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Envoyer</a>, and <a href="https://herd.laravel.com" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Herd</a> help you take your projects to the next level. Pair them with powerful open source libraries like <a href="https://laravel.com/docs/billing" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Cashier</a>, <a href="https://laravel.com/docs/dusk" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Dusk</a>, <a href="https://laravel.com/docs/broadcasting" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Echo</a>, <a href="https://laravel.com/docs/horizon" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Horizon</a>, <a href="https://laravel.com/docs/sanctum" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Sanctum</a>, <a href="https://laravel.com/docs/telescope" class="rounded-sm underline hover:text-black focus:outline-none focus-visible:ring-1 focus-visible:ring-[#FF2D20] dark:hover:text-white">Telescope</a>, and more.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </main>
-
-                    <footer class="py-16 text-center text-sm text-black dark:text-white/70">
-                        Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
-                    </footer>
+<!-- HOW IT WORKS -->
+<section class="how">
+    <div class="how-inner">
+        <div>
+            <span class="section-label">How It Works</span>
+            <h2 class="section-title">Simple by design,<br>powerful by nature</h2>
+            <p class="section-sub" style="margin-bottom:36px;">SIPAMS is built for business owners and staff who need speed, not complexity.</p>
+            <div class="how-steps">
+                <div class="how-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h3>Add your products &amp; suppliers</h3>
+                        <p>Set up your catalog with categories, SKUs, barcodes, and pricing. Link products to suppliers for seamless procurement.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h3>Sell at the POS terminal</h3>
+                        <p>Ring up sales by scanning barcodes or searching by name. Accept cash or other payment methods and print receipts instantly.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h3>Restock via purchase orders</h3>
+                        <p>Create POs for your suppliers, track delivery status, and stock levels update automatically when orders are received.</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h3>Review reports &amp; grow</h3>
+                        <p>Use real-time dashboards and detailed reports to understand sales trends, top products, and your financial position.</p>
+                    </div>
                 </div>
             </div>
         </div>
-    </body>
+        <div class="how-visual">
+            <div class="mock-bar">
+                <div class="mock-dot" style="background:#ef4444;"></div>
+                <div class="mock-dot" style="background:#f59e0b;margin-left:4px;"></div>
+                <div class="mock-dot" style="background:#10b981;margin-left:4px;"></div>
+                <span class="mock-title">Dashboard Overview</span>
+            </div>
+            <div class="mock-card">
+                <div class="mock-card-left">
+                    <div class="mock-card-icon"><svg width="16" height="16" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
+                    <div><div class="mock-card-label">Today's Sales</div><div class="mock-card-sub">32 transactions</div></div>
+                </div>
+                <div class="mock-card-val">GHS 4,820</div>
+            </div>
+            <div class="mock-card">
+                <div class="mock-card-left">
+                    <div class="mock-card-icon"><svg width="16" height="16" fill="none" stroke="#0d9488" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+                    <div><div class="mock-card-label">Stock Value</div><div class="mock-card-sub">248 products</div></div>
+                </div>
+                <div class="mock-card-val">GHS 91,340</div>
+            </div>
+            <div class="mock-card">
+                <div class="mock-card-left">
+                    <div class="mock-card-icon"><svg width="16" height="16" fill="none" stroke="#f59e0b" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M5.07 19H19a2 2 0 001.75-2.97l-6.98-12a2 2 0 00-3.5 0l-6.98 12A2 2 0 005.07 19z"/></svg></div>
+                    <div><div class="mock-card-label">Low Stock</div><div class="mock-card-sub">Needs attention</div></div>
+                </div>
+                <div class="mock-card-val" style="color:#f59e0b;">12 items</div>
+            </div>
+            <div class="mock-chart-bars">
+                <div class="mock-bar-item" style="height:40%;"></div>
+                <div class="mock-bar-item" style="height:65%;"></div>
+                <div class="mock-bar-item active" style="height:80%;"></div>
+                <div class="mock-bar-item" style="height:55%;"></div>
+                <div class="mock-bar-item active" style="height:90%;"></div>
+                <div class="mock-bar-item" style="height:70%;"></div>
+                <div class="mock-bar-item active" style="height:100%;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- MODULES -->
+<section class="modules" id="modules">
+    <div class="modules-inner">
+        <div class="section-header">
+            <span class="section-label">All Modules</span>
+            <h2 class="section-title">One system, complete control</h2>
+            <p class="section-sub">Every module works together seamlessly so your data is always in sync.</p>
+        </div>
+        <div class="modules-grid">
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
+                <span class="module-pill-text">Dashboard</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg></div>
+                <span class="module-pill-text">Point of Sale</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg></div>
+                <span class="module-pill-text">Categories</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg></div>
+                <span class="module-pill-text">Products</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg></div>
+                <span class="module-pill-text">Inventory</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg></div>
+                <span class="module-pill-text">Suppliers</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
+                <span class="module-pill-text">Purchases</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a4 4 0 014 4v1m-7-9l-3 3 3 3"/></svg></div>
+                <span class="module-pill-text">Sales Returns</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/></svg></div>
+                <span class="module-pill-text">Expenses</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg></div>
+                <span class="module-pill-text">Reports</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg></div>
+                <span class="module-pill-text">Print Labels</span>
+            </a>
+            <a href="{{ route('login') }}" class="module-pill">
+                <div class="module-pill-icon"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                <span class="module-pill-text">Administration</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+    <h2>Ready to take control of your business?</h2>
+    <p>Sign in to your SIPAMS dashboard and start managing sales, stock, and finances with clarity.</p>
+    <a href="{{ route('login') }}" class="btn-hero btn-hero-primary" style="display:inline-flex;">
+        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
+        Sign In Now
+    </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="footer-logo">S</div>
+            <span class="footer-name">SIPAMS</span>
+        </div>
+        <span class="footer-copy">© {{ date('Y') }} SIPAMS. Smart Inventory & POS Management.</span>
+        <div class="footer-links">
+            <a href="{{ route('login') }}">Login</a>
+            <a href="#features">Features</a>
+            <a href="#modules">Modules</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Navbar scroll shadow
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+        nav.classList.toggle('scrolled', window.scrollY > 10);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+        a.addEventListener('click', e => {
+            const target = document.querySelector(a.getAttribute('href'));
+            if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
+        });
+    });
+</script>
+</body>
 </html>
